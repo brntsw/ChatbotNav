@@ -1,5 +1,7 @@
 package projectnavi.com.chatbotnav.ui.presenter;
 
+import java.util.List;
+
 import projectnavi.com.chatbotnav.model.Info;
 
 /**
@@ -9,8 +11,8 @@ import projectnavi.com.chatbotnav.model.Info;
 public interface MessageContract {
 
     interface View{
-        void onSuccessMessage(String msgRetorno);
-        void onErrorMessage();
+        void onSuccessMessage(List<String> msgRetorno);
+        void onErrorMessage(int code);
     }
 
     interface Presenter{

@@ -2,13 +2,15 @@ package projectnavi.com.chatbotnav.ui.presenter;
 
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import okhttp3.RequestBody;
 import projectnavi.com.chatbotnav.model.Info;
 import projectnavi.com.chatbotnav.model.ResponseBot;
 import projectnavi.com.chatbotnav.remote.RestApi;
 import projectnavi.com.chatbotnav.utils.AppConstants;
+import projectnavi.com.chatbotnav.utils.JsonUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,27 +33,30 @@ public class MessagePresenter implements MessageContract.Presenter {
 
     @Override
     public void sendMessage(Info info) {
-        Map<String, String> map = new HashMap<>();
-        map.put("deviceName", info.getDeviceName());
-        map.put("speakText", info.getSpeakText());
+        try {
+            JSONObject jsonInfo = JsonUtils.convertToJson(info);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonInfo.toString());
 
-        Call<ResponseBot> infoCall = mRestApi.sendInfo(map);
-        infoCall.enqueue(new Callback<ResponseBot>() {
-            @Override
-            public void onResponse(Call<ResponseBot> call, Response<ResponseBot> response) {
-                if(response.code() == AppConstants.STATUS_CODE_SUCCESS){
-                    mView.onSuccessMessage(response.body().getResponseText());
+            Call<ResponseBot> infoCall = mRestApi.sendInfo(body);
+            infoCall.enqueue(new Callback<ResponseBot>() {
+                @Override
+                public void onResponse(Call<ResponseBot> call, Response<ResponseBot> response) {
+                    if (response.code() == AppConstants.STATUS_CODE_SUCCESS) {
+                        mView.onSuccessMessage(response.body().getResponseText());
+                    } else {
+                        mView.onErrorMessage(response.code());
+                    }
                 }
-                else{
-                    mView.onErrorMessage();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBot> call, Throwable t) {
-                Log.e(TAG, t.getMessage());
-                mView.onErrorMessage();
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseBot> call, Throwable t) {
+                    Log.e(TAG, t.getMessage());
+                    mView.onErrorMessage(AppConstants.STATUS_CODE_ERROR);
+                }
+            });
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 }

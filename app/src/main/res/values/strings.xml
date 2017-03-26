@@ -2,4 +2,8 @@
     <string name="app_name">ChatbotNav</string>
 
     <string name="enviar">Enviar</string>
+
+    <!-- Respostas -->
+    <string name="nao_encontrei">Não pude encontrar nenhuma informação sobre isso</string>
+    <string name="erro">Erro</string>
 </resources>

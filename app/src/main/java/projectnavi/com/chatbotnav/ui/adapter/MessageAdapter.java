@@ -65,7 +65,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mMensagens.size();
     }
 
-    public void notifyData(List<Message> mensagens, int msgType){
+    public void notifyData(List<Message> mensagens){
         mMensagens = mensagens;
         notifyItemInserted(mMensagens.size() - 1);
         notifyDataSetChanged();

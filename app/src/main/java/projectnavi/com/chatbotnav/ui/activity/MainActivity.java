@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         ButterKnife.bind(this);
 
         setup();
@@ -62,11 +63,16 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
             message.setTime(DateUtils.getCurrentTime());
 
             listaMsg.add(message);
-            adapter.notifyData(listaMsg, AppConstants.MSG_MINE);
+            adapter.notifyData(listaMsg);
             recyclerMensagens.smoothScrollToPosition(recyclerMensagens.getAdapter().getItemCount() - 1);
 
             Info info = new Info();
-            info.setDeviceName("microondas");
+            if(args != null && args.getString("deviceName") != null){
+                info.setDeviceName(args.getString("deviceName"));
+            }
+            else{
+                info.setDeviceName("Maquina de Lavar");
+            }
             info.setSpeakText(msg);
 
             presenter.sendMessage(info);
@@ -96,28 +102,47 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
     }
 
     @Override
-    public void onSuccessMessage(String msgRetorno) {
+    public void onSuccessMessage(List<String> msgRetorno) {
         btEnviar.setEnabled(true);
         Message message = new Message();
         message.setType(AppConstants.MSG_BOT);
-        message.setText(msgRetorno);
+        if(msgRetorno.size() > 0){
+            message.setText(msgRetorno.get(0));
+        }
+        else{
+            message.setText(getString(R.string.nao_encontrei));
+        }
         message.setTime(DateUtils.getCurrentTime());
         listaMsg.add(message);
-        adapter.notifyData(listaMsg, AppConstants.MSG_BOT);
+        adapter.notifyData(listaMsg);
         recyclerMensagens.smoothScrollToPosition(recyclerMensagens.getAdapter().getItemCount() - 1);
     }
 
     @Override
-    public void onErrorMessage() {
+    public void onErrorMessage(int code) {
         Log.e("Erro", "error message");
         btEnviar.setEnabled(true);
         Message message = new Message();
-        message.setType(AppConstants.MSG_ERRO);
-        message.setText("Error");
+
+        switch (code){
+            case AppConstants.STATUS_CODE_NOT_FOUND:
+                message.setType(AppConstants.MSG_BOT);
+                message.setText(getString(R.string.nao_encontrei));
+                break;
+            case AppConstants.STATUS_CODE_ERROR:
+                message.setType(AppConstants.MSG_ERRO);
+                message.setText(getString(R.string.erro));
+                break;
+            default:
+                message.setType(AppConstants.MSG_ERRO);
+                message.setText(getString(R.string.erro));
+                break;
+        }
+
         message.setTime(DateUtils.getCurrentTime());
 
         listaMsg.add(message);
-        adapter.notifyData(listaMsg, AppConstants.MSG_ERRO);
+        adapter.notifyData(listaMsg);
         recyclerMensagens.smoothScrollToPosition(recyclerMensagens.getAdapter().getItemCount() - 1);
     }
 }

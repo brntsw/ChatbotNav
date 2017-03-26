@@ -6,8 +6,8 @@ package projectnavi.com.chatbotnav.utils;
 
 public class AppConstants {
 
-    public static final String BASE_URL = "https://example.com";
-    public static final String SEND_INFO = "send";
+    public static final String BASE_URL = "http://6cc42457.ngrok.io/projectnavi/";
+    public static final String SEND_INFO = "message";
 
     public static final int STATUS_CODE_SUCCESS = 200;
     public static final int STATUS_CODE_SUCCESS_NO_BODY = 204;
