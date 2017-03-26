@@ -8,6 +8,7 @@ public class Message {
 
     private int type;
     private String text;
+    private String time;
 
     public int getType() {
         return type;
@@ -23,5 +24,13 @@ public class Message {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

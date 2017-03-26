@@ -22,6 +22,7 @@ import projectnavi.com.chatbotnav.ui.adapter.MessageAdapter;
 import projectnavi.com.chatbotnav.ui.presenter.MessageContract;
 import projectnavi.com.chatbotnav.ui.presenter.MessagePresenter;
 import projectnavi.com.chatbotnav.utils.AppConstants;
+import projectnavi.com.chatbotnav.utils.DateUtils;
 
 public class MainActivity extends AppCompatActivity implements MessageContract.View {
 
@@ -54,9 +55,11 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
     public void buttonEnviarClick(){
         String msg = editMensagem.getText().toString();
         if(!"".equals(msg)){
+            editMensagem.setText("");
             Message message = new Message();
             message.setType(AppConstants.MSG_MINE);
             message.setText(msg);
+            message.setTime(DateUtils.getCurrentTime());
 
             listaMsg.add(message);
             adapter.notifyData(listaMsg, AppConstants.MSG_MINE);
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
     private void setup(){
         args = getIntent().getExtras();
 
-        if(args != null){
+        if(args != null && args.getString("deviceName") != null){
             if(getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(args.getString("deviceName"));
             }
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
         Message message = new Message();
         message.setType(AppConstants.MSG_BOT);
         message.setText(msgRetorno);
+        message.setTime(DateUtils.getCurrentTime());
         listaMsg.add(message);
         adapter.notifyData(listaMsg, AppConstants.MSG_BOT);
         recyclerMensagens.smoothScrollToPosition(recyclerMensagens.getAdapter().getItemCount() - 1);
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements MessageContract.V
         Message message = new Message();
         message.setType(AppConstants.MSG_ERRO);
         message.setText("Error");
+        message.setTime(DateUtils.getCurrentTime());
 
         listaMsg.add(message);
         adapter.notifyData(listaMsg, AppConstants.MSG_ERRO);

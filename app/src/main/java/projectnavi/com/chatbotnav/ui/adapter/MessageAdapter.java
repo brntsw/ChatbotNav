@@ -76,6 +76,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         @BindView(R.id.tv_message_content)
         TextView tvMessage;
 
+        @BindView(R.id.tv_time)
+        TextView tvTime;
+
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -83,6 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         void bind(Message message){
             tvMessage.setText(message.getText());
+            tvTime.setText(message.getTime());
         }
     }
 
